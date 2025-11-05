@@ -1,0 +1,9 @@
+FROM ubuntu
+RUN apt update && apt install curl --yes
+LABEL contato="essa e uma label de comentario"
+LABEL versao="Beta 0.1"
+ENV MinhaVariavelDeAmbiente = "definida"
+WORKDIR /app
+VOLUME [ "/data" ]
+ADD source dest
+ADD teste.tar.gz ./
