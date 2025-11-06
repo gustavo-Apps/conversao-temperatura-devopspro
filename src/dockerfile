@@ -1,50 +1,16 @@
 # Definindo os componontes da imagem docker e definindo porta exposta
 FROM ubuntu
-EXPOSE 80
-
-# --- Setup inicial e att do bash
-RUN apt update && apt install curl --yes
-RUN apt install nginx --yes
-
-# --- Comentarios
-LABEL contato="essa e uma label de comentario"
-LABEL versao="Beta 0.1"
 
 # --- Definindo Diretorio padrao de trabalho
 WORKDIR /app
-
-# --- Criando novo `Volume`
-VOLUME [ "/data" ]
-
-# --- Definindo variaveis
-ENV MinhaVariavelDeAmbiente="CriadaComVariavel"
-ARG Name="XPTO"
-ARG Data="2025-11-05"
-ENV Usuario=usercomum
-# Criando e copiando arquivos no diretorio padrao de trabalho
-ADD server.js ./
-RUN echo $NAME > arquivo.txt
-RUN echo $Name $Data > ${MinhaVariavelDeAmbiente}.txt
-
-# Criando e definindo usuarios que sera usado no container
-RUN useradd $Usuario
-USER $Usuario
-
-# Definindo arquivos com o user owner sendo o criado
-COPY --chown=$Usuario:$Usuario --chmod=404 server.js ./
-COPY --chown=$Usuario:$Usuario  --chmod=100 ./entrypoint.sh ./
-
-# Imprimindo mensagem ao iniciar CMD e ENTRYPOINT
-# ENTRYPOINT [ "echo", "Hello World!" ]
-# CMD [ "Combinando com ENTRYPOINT" ]
-
-# Iniciando arquivo .sh 
+COPY --chown=root:root --chmod=100 ./entrypoint.sh .
 ENTRYPOINT [ "./entrypoint.sh" ]
+# Passando parametro padrao via CMD
+CMD [ "XPTO" ]
 
 # --- Comandos para iniciar
 # sudo docker build -t ubuntu-curl .
 # sudo docker inspect ubuntu-curl
-# docker container run -it -p 8080:80 ubuntu-curl /bin/bash  
-# /usr/sbin/nginx -g "daemon off;"
+# docker container run ubuntu-curl  
 
 # Variaveis podem ser sobrescritas ao passar parametros no docker build, assim como o CMD e ENTRYPOINT 
