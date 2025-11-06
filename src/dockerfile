@@ -20,15 +20,18 @@ VOLUME [ "/data" ]
 ENV MinhaVariavelDeAmbiente="CriadaComVariavel"
 ARG Name="XPTO"
 ARG Data="2025-11-05"
-
+ENV Usuario=usercomum
 # Criando e copiando arquivos no diretorio padrao de trabalho
 ADD server.js ./
 RUN echo $NAME > arquivo.txt
 RUN echo $Name $Data > ${MinhaVariavelDeAmbiente}.txt
 
 # Criando e definindo usuarios que sera usado no container
-RUN useradd usuariocomum
-USER usuariocomum
+RUN useradd $Usuario
+USER $Usuario
+
+# Definindo arquivos com o user owner sendo o criado
+COPY --chown=$Usuario:$Usuario --chmod=404 server.js ./
 
 # --- Comandos para iniciar
 # sudo docker build -t ubuntu-curl .
