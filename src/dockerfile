@@ -32,9 +32,19 @@ USER $Usuario
 
 # Definindo arquivos com o user owner sendo o criado
 COPY --chown=$Usuario:$Usuario --chmod=404 server.js ./
+COPY --chown=$Usuario:$Usuario  --chmod=100 ./entrypoint.sh ./
+
+# Imprimindo mensagem ao iniciar CMD e ENTRYPOINT
+# ENTRYPOINT [ "echo", "Hello World!" ]
+# CMD [ "Combinando com ENTRYPOINT" ]
+
+# Iniciando arquivo .sh 
+ENTRYPOINT [ "./entrypoint.sh" ]
 
 # --- Comandos para iniciar
 # sudo docker build -t ubuntu-curl .
 # sudo docker inspect ubuntu-curl
 # docker container run -it -p 8080:80 ubuntu-curl /bin/bash  
 # /usr/sbin/nginx -g "daemon off;"
+
+# Variaveis podem ser sobrescritas ao passar parametros no docker build, assim como o CMD e ENTRYPOINT 
