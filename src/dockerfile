@@ -1,16 +1,26 @@
 # Definindo os componontes da imagem docker e definindo porta exposta
 FROM ubuntu
 
-# --- Definindo Diretorio padrao de trabalho
+ARG NODE_MAJOR=21
+
+# Instala dependências necessárias
+RUN apt-get update && \
+    apt-get install -y curl ca-certificates
+
+# Instala o Node.js 20.x
+RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_MAJOR}.x | bash - && \
+    apt-get install -y nodejs
+    
+    
+# --- Definindo Diretorio padrao de trabalho e copiando arquivos projeto
 WORKDIR /app
-COPY --chown=root:root --chmod=100 ./entrypoint.sh .
-ENTRYPOINT [ "./entrypoint.sh" ]
-# Passando parametro padrao via CMD
-CMD [ "XPTO" ]
+COPY . .
+
+# Instalando pacotes do projeto
+RUN npm install
+ENTRYPOINT [ "node", "server.js" ]
 
 # --- Comandos para iniciar
-# sudo docker build -t ubuntu-curl .
-# sudo docker inspect ubuntu-curl
-# docker container run ubuntu-curl  
-
-# Variaveis podem ser sobrescritas ao passar parametros no docker build, assim como o CMD e ENTRYPOINT 
+# sudo docker build -t conversao-temperatura-dockerfile .
+# sudo docker inspect conversao-temperatura-dockerfile
+# docker container run -d -p 8080:8080 conversao-temperatura-dockerfile
